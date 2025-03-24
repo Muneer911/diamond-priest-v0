@@ -71,6 +71,7 @@ def predict():
     try:
         # 1. Get the incoming JSON data from the POST request
         incoming_data = request.get_json()
+        print(incoming_data)
 
         if not incoming_data:
             return jsonify({"error": "Invalid JSON input"}), 400
@@ -85,10 +86,7 @@ def predict():
 
         # 3. Preprocess the incoming data
         processed_data = preprocessor.transform(data)
-
-        # processed = preprocessor.transform(input_data)
-        print(processed_data)
-
+        
         # 4. Use the preprocessed data to make a prediction
         prediction = model.predict(processed_data)
 
@@ -96,7 +94,11 @@ def predict():
         return jsonify({"prediction": prediction.tolist()})
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        return jsonify(error=f"the error is {str(e)}")
+    
+
+
+# @app.route("/")
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000, debug=True)
