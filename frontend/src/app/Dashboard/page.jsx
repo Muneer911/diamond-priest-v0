@@ -1,6 +1,28 @@
 "use client";
+import { useState } from "react";
+// Removed invalid import
 import "./style.css";
+import axios from "axios";
 export default function dashboard() {
+  const [formData, setFormData] = useState();
+  const [price, setPrice] = useState();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handlePrediction = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:5000/predict",
+        formData
+      );
+      setPrice(response.data?.prediction);
+    } catch {
+      alert("Error");
+    }
+  };
   return (
     <div id="dashboard-page" className="hidden">
       <main>
@@ -36,7 +58,7 @@ export default function dashboard() {
                 <button className="btn btn-outline">View History</button>
               </div>
 
-              <form className="diamond-form">
+              <form className="diamond-form" onSubmit={handlePrediction}>
                 <div className="form-group">
                   <label htmlFor="carat">Carat Weight</label>
                   <input
@@ -46,12 +68,20 @@ export default function dashboard() {
                     placeholder="e.g. 1.5"
                     step="0.01"
                     min="0.1"
+                    onChange={handleChange}
+                    name="carat"
                   />
                 </div>
 
                 <div className="form-group">
                   <label htmlFor="cut">Cut Quality</label>
-                  <select className="form-control" id="cut" defaultValue="">
+                  <select
+                    className="form-control"
+                    id="cut"
+                    defaultValue=""
+                    onChange={handleChange}
+                    name="cut"
+                  >
                     <option value="" disabled>
                       Select cut quality
                     </option>
@@ -65,7 +95,13 @@ export default function dashboard() {
 
                 <div className="form-group">
                   <label htmlFor="color">Color Grade</label>
-                  <select className="form-control" id="color" defaultValue="">
+                  <select
+                    className="form-control"
+                    id="color"
+                    defaultValue=""
+                    onChange={handleChange}
+                    name="color"
+                  >
                     <option value="" disabled>
                       Select color grade
                     </option>
@@ -81,7 +117,13 @@ export default function dashboard() {
 
                 <div className="form-group">
                   <label htmlFor="clarity">Clarity</label>
-                  <select className="form-control" id="clarity" defaultValue="">
+                  <select
+                    className="form-control"
+                    id="clarity"
+                    defaultValue=""
+                    onChange={handleChange}
+                    name="clarity"
+                  >
                     <option value="" disabled>
                       Select clarity grade
                     </option>
@@ -110,6 +152,8 @@ export default function dashboard() {
                     step="0.1"
                     min="50"
                     max="70"
+                    onChange={handleChange}
+                    name="depth"
                   />
                 </div>
 
@@ -123,12 +167,56 @@ export default function dashboard() {
                     step="0.1"
                     min="50"
                     max="70"
+                    onChange={handleChange}
+                    name="table"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="x_dimension">X Dimension (mm)</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="x_dimension"
+                    placeholder="e.g. 5.12"
+                    step="0.01"
+                    min="0"
+                    onChange={handleChange}
+                    name="x"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="y_dimension">Y Dimension (mm)</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="y_dimension"
+                    placeholder="e.g. 5.08"
+                    step="0.01"
+                    min="0"
+                    onChange={handleChange}
+                    name="y"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="z_dimension">Z Dimension (mm)</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="z_dimension"
+                    placeholder="e.g. 3.15"
+                    step="0.01"
+                    min="0"
+                    onChange={handleChange}
+                    name="z"
                   />
                 </div>
 
                 <div className="form-footer">
                   <button
-                    type="button"
+                    type="submit"
                     className="btn btn-primary"
                     onClick={() => {}}
                   >
@@ -142,7 +230,9 @@ export default function dashboard() {
 
                 <div className="prediction-result">
                   <p>Estimated Diamond Value</p>
-                  <div className="result-value">$8,432.50</div>
+                  <div className="result-value">
+                    {price ? ` $${price}` : "$8,432.50"}
+                  </div>
                   <p className="result-confidence">
                     Prediction confidence: 92%
                   </p>
