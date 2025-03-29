@@ -1,28 +1,50 @@
 "use client";
-import { useState } from "react";
-// Removed invalid import
+
+import { useEffect, useState } from "react";
 import "./style.css";
 import axios from "axios";
+
 export default function dashboard() {
   const [formData, setFormData] = useState();
   const [price, setPrice] = useState();
+  const [hisData, setHisData] = useState([]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Handle prediction request
   const handlePrediction = async (e) => {
     e.preventDefault();
     try {
+      // Send formData to the backend for prediction
       const response = await axios.post(
         "http://127.0.0.1:5000/predict",
         formData
       );
-      setPrice(response.data?.prediction);
+      console.log(response);
+
+      setPrice(response["data"]);
     } catch {
       alert("Error");
     }
   };
+
+  useEffect(() => {
+    const fetchis = async () => {
+      // Ensure price is valid before proceeding
+      try {
+        const response = await axios.get("http://127.0.0.1:5000/gethis");
+        console.log("Fetched Prediction History:", response.data);
+        setHisData(response.data);
+      } catch (error) {
+        console.error("Error fetching prediction history:", error);
+        alert("Failed to fetch prediction history. Please try again.");
+      }
+    };
+    fetchis();
+  }, []);
+
   return (
     <div id="dashboard-page" className="hidden">
       <main>
@@ -172,11 +194,11 @@ export default function dashboard() {
                   />
                 </div>
 
-                <div class="form-group">
-                  <label for="x_dimension">X Dimension (mm)</label>
+                <div className="form-group">
+                  <label htmlFor="x_dimension">X Dimension (mm)</label>
                   <input
                     type="number"
-                    class="form-control"
+                    className="form-control"
                     id="x_dimension"
                     placeholder="e.g. 5.12"
                     step="0.01"
@@ -186,11 +208,11 @@ export default function dashboard() {
                   />
                 </div>
 
-                <div class="form-group">
-                  <label for="y_dimension">Y Dimension (mm)</label>
+                <div className="form-group">
+                  <label htmlFor="y_dimension">Y Dimension (mm)</label>
                   <input
                     type="number"
-                    class="form-control"
+                    className="form-control"
                     id="y_dimension"
                     placeholder="e.g. 5.08"
                     step="0.01"
@@ -200,11 +222,11 @@ export default function dashboard() {
                   />
                 </div>
 
-                <div class="form-group">
-                  <label for="z_dimension">Z Dimension (mm)</label>
+                <div className="form-group">
+                  <label htmlFor="z_dimension">Z Dimension (mm)</label>
                   <input
                     type="number"
-                    class="form-control"
+                    className="form-control"
                     id="z_dimension"
                     placeholder="e.g. 3.15"
                     step="0.01"
@@ -215,11 +237,7 @@ export default function dashboard() {
                 </div>
 
                 <div className="form-footer">
-                  <button
-                    type="submit"
-                    className="btn btn-primary"
-                    onClick={() => {}}
-                  >
+                  <button type="submit" className="btn btn-primary">
                     Predict Value
                   </button>
                 </div>
@@ -233,28 +251,10 @@ export default function dashboard() {
                   <div className="result-value">
                     {price ? ` $${price}` : "$8,432.50"}
                   </div>
-                  <p className="result-confidence">
-                    Prediction confidence: 92%
-                  </p>
-                </div>
 
-                <div className="detail-cards">
-                  <div className="detail-card">
-                    <h4>Price Range</h4>
-                    <p>$7,950 - $8,900</p>
-                  </div>
-                  <div className="detail-card">
-                    <h4>Market Trend</h4>
-                    <p>Upward (+3.2%)</p>
-                  </div>
-                  <div className="detail-card">
-                    <h4>Similar Diamonds</h4>
-                    <p>42 matches</p>
-                  </div>
-                  <div className="detail-card">
-                    <h4>Quality Score</h4>
-                    <p>8.7/10</p>
-                  </div>
+                  <p className="result-confidence">
+                    Prediction confidence: 92%{" "}
+                  </p>
                 </div>
 
                 <div className="history-section">
@@ -267,26 +267,38 @@ export default function dashboard() {
                         <th>Cut</th>
                         <th>Color</th>
                         <th>Clarity</th>
+                        <th>Depth</th>
+                        <th>Table precentage</th>
+                        <th>X</th>
+                        <th>Y</th>
+                        <th>Z</th>
                         <th>Predicted Value</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>Mar 21, 2025</td>
-                        <td>1.2</td>
-                        <td>Ideal</td>
-                        <td>F</td>
-                        <td>VS1</td>
-                        <td>$7,245.00</td>
-                      </tr>
-                      <tr>
-                        <td>Mar 18, 2025</td>
-                        <td>0.8</td>
-                        <td>Premium</td>
-                        <td>E</td>
-                        <td>VVS2</td>
-                        <td>$4,120.75</td>
-                      </tr>
+                      {hisData && hisData.length > 0
+                        ? hisData.map((entry, index) => (
+                            <tr key={index}>
+                              <td>{entry?.date}</td>
+                              <td>
+                                {entry?.data?.carat.toUpperCase() || "N/A"}
+                              </td>
+                              <td>{entry?.data?.cut.toUpperCase() || "N/A"}</td>
+                              <td>
+                                {entry?.data?.color.toUpperCase() || "N/A"}
+                              </td>
+                              <td>
+                                {entry?.data?.clarity.toUpperCase() || "N/A"}
+                              </td>
+                              <td>{entry?.data?.depth || "N/A"}</td>
+                              <td>{entry?.data?.table || "N/A"}</td>
+                              <td>{entry?.data?.x || "N/A"}</td>
+                              <td>{entry?.data?.y || "N/A"}</td>
+                              <td>{entry?.data?.z || "N/A"}</td>
+                              <td>{entry?.price || "N/A"}</td>
+                            </tr>
+                          ))
+                        : ""}
                     </tbody>
                   </table>
                 </div>
