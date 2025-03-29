@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./style.css";
 import axios from "axios";
 
@@ -7,6 +7,15 @@ export default function dashboard() {
   const [formData, setFormData] = useState();
   const [price, setPrice] = useState();
   const [hisData, setHisData] = useState([]);
+  const historyRef = useRef(null);
+
+  const handleHistoryRef = () => {
+    if (historyRef.current)
+      historyRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -42,7 +51,7 @@ export default function dashboard() {
       }
     };
     fetchis();
-  }, []);
+  }, [price]);
 
   return (
     <div id="dashboard-page" className="hidden">
@@ -65,7 +74,9 @@ export default function dashboard() {
                   </a>
                 </li>
                 <li>
-                  <a href="#">Prediction History</a>
+                  <a href="#" onClick={handleHistoryRef}>
+                    Prediction History
+                  </a>
                 </li>
                 <li>
                   <a href="#">Model Performance</a>
@@ -256,7 +267,7 @@ export default function dashboard() {
                   </p>
                 </div>
 
-                <div className="history-section">
+                <div ref={historyRef} className="history-section">
                   <h3 className="history-title">Recent Predictions</h3>
                   <table className="history-table">
                     <thead>
