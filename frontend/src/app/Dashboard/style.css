@@ -85,6 +85,9 @@
   gap: 20px;
 }
 
+.form-group {
+  background-color: white;
+}
 .form-footer {
   grid-column: 1 / -1;
   display: flex;
