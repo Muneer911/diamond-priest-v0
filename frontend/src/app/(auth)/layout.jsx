@@ -1,10 +1,10 @@
-import Header from "./header";
+import AuthHeader from "../components/authHeader";
 
 export default function RootLayout({ children }) {
   return (
     <html>
       <body>
-        <Header />
+        <AuthHeader />
         {children}
       </body>
     </html>

@@ -1,9 +1,9 @@
-import Header from "./header";
+import DashBoardHeader from "../components/dashBoardHeader";
 
 export default function RootLayout({ children }) {
   return (
     <>
-      <Header />
+      <DashBoardHeader />
       {children}
     </>
   );
