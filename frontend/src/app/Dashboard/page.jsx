@@ -1,13 +1,17 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+// import { useRouter } from "next/navigation";
 import "./style.css";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 export default function dashboard() {
-  const [formData, setFormData] = useState();
-  const [price, setPrice] = useState();
+  const [formData, setFormData] = useState({});
+  const DEFAULT_PRICE = "$8,432.50";
+  const [price, setPrice] = useState(null);
   const [hisData, setHisData] = useState([]);
   const historyRef = useRef(null);
+  const [userProfile, setUserProfile] = useState();
 
   const handleHistoryRef = () => {
     if (historyRef.current)
@@ -25,33 +29,62 @@ export default function dashboard() {
   const handlePrediction = async (e) => {
     e.preventDefault();
     try {
+      const access_token = Cookies.get("access_token");
       // Send formData to the backend for prediction
       const response = await axios.post(
         "http://127.0.0.1:5000/predict",
-        formData
+        formData,
+        { headers: { Authorization: `Bearer ${access_token}` } }
       );
       console.log(response);
 
-      setPrice(response["data"]);
-    } catch {
-      alert("Error");
+      if (response && response.data) {
+        setPrice(response.data);
+      } else {
+        console.error("Unexpected response format:", response);
+        alert("Failed to retrieve prediction. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error during prediction request:", error);
+      alert(
+        "An error occurred while processing your prediction request. Please check your input and try again."
+      );
     }
   };
 
   useEffect(() => {
-    const fetchis = async () => {
-      // Ensure price is valid before proceeding
+    const access_token = Cookies.get("access_token");
+    console.log("Access Token:", access_token);
+
+    const fetchData = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:5000/gethis");
-        console.log("Fetched Prediction History:", response.data);
-        setHisData(response.data);
+        const response = await axios.post(
+          "http://127.0.0.1:5000/userdata", // API endpoint
+          {}, // Empty body for the POST request
+          {
+            headers: { Authorization: `Bearer ${access_token}` }, // Headers
+          }
+        );
+        console.log("Response:", response.data?.message);
+        console.log("profile:", response.data?.user_profile);
+        console.log("history:", response.data?.user_histroy);
+
+        const theData = response.data?.user_history;
+        const userpro = [response.data?.user_profile];
+
+        setUserProfile(userpro);
+        setHisData(theData);
       } catch (error) {
-        console.error("Error fetching prediction history:", error);
-        alert("Failed to fetch prediction history. Please try again.");
+        console.error(
+          "Error fetching user data:",
+          error.response?.data || error
+        );
+        alert("Failed to fetch user data. Please try again.");
       }
     };
-    fetchis();
-  }, [price]);
+
+    fetchData();
+  }, []);
 
   return (
     <div id="dashboard-page" className="hidden">
@@ -60,10 +93,17 @@ export default function dashboard() {
           <div className="dashboard">
             <div className="sidebar">
               <div className="sidebar-header">
-                <div className="user-avatar">JD</div>
                 <div>
-                  <h3>John Doe</h3>
-                  <p>john.doe@example.com</p>
+                  {userProfile &&
+                  Array.isArray(userProfile) &&
+                  userProfile.length > 0 ? (
+                    <>
+                      <h3>{userProfile[0].user_name}</h3>
+                      <p>{userProfile[0].user_email}</p>
+                    </>
+                  ) : (
+                    <p>Loading...</p>
+                  )}
                 </div>
               </div>
 
@@ -78,16 +118,15 @@ export default function dashboard() {
                     Prediction History
                   </a>
                 </li>
-                <li>
-                  <a href="#">Model Performance</a>
-                </li>
               </ul>
             </div>
 
             <div className="main-content">
               <div className="dashboard-header">
                 <h2 className="dashboard-title">Diamond Value Prediction</h2>
-                <button className="btn btn-outline">View History</button>
+                <button className="btn btn-outline" onClick={handleHistoryRef}>
+                  View History
+                </button>
               </div>
 
               <form className="diamond-form" onSubmit={handlePrediction}>
@@ -246,11 +285,9 @@ export default function dashboard() {
                   />
                 </div>
 
-                <div className="form-footer">
-                  <button type="submit" className="btn btn-primary">
-                    Predict Value
-                  </button>
-                </div>
+                <button type="submit" className="btn btn-primary">
+                  Get Diamond Value Prediction
+                </button>
               </form>
 
               <div id="results-section" className="results-section hidden">
@@ -259,12 +296,8 @@ export default function dashboard() {
                 <div className="prediction-result">
                   <p>Estimated Diamond Value</p>
                   <div className="result-value">
-                    {price ? ` $${price}` : "$8,432.50"}
+                    {price ? ` $${price}` : DEFAULT_PRICE}
                   </div>
-
-                  <p className="result-confidence">
-                    Prediction confidence: 92%{" "}
-                  </p>
                 </div>
 
                 <div ref={historyRef} className="history-section">
@@ -278,7 +311,7 @@ export default function dashboard() {
                         <th>Color</th>
                         <th>Clarity</th>
                         <th>Depth</th>
-                        <th>Table precentage</th>
+                        <th>Table percentage</th>
                         <th>X</th>
                         <th>Y</th>
                         <th>Z</th>
@@ -286,29 +319,29 @@ export default function dashboard() {
                       </tr>
                     </thead>
                     <tbody>
-                      {hisData && hisData.length > 0
-                        ? hisData.map((entry, index) => (
-                            <tr key={index}>
-                              <td>{entry?.date}</td>
-                              <td>
-                                {entry?.data?.carat.toUpperCase() || "N/A"}
-                              </td>
-                              <td>{entry?.data?.cut.toUpperCase() || "N/A"}</td>
-                              <td>
-                                {entry?.data?.color.toUpperCase() || "N/A"}
-                              </td>
-                              <td>
-                                {entry?.data?.clarity.toUpperCase() || "N/A"}
-                              </td>
-                              <td>{entry?.data?.depth || "N/A"}</td>
-                              <td>{entry?.data?.table || "N/A"}</td>
-                              <td>{entry?.data?.x || "N/A"}</td>
-                              <td>{entry?.data?.y || "N/A"}</td>
-                              <td>{entry?.data?.z || "N/A"}</td>
-                              <td>{entry?.price || "N/A"}</td>
-                            </tr>
-                          ))
-                        : ""}
+                      {hisData && hisData.length > 0 ? (
+                        hisData.map((entry, index) => (
+                          <tr key={index}>
+                            <td>{entry?.date}</td>
+                            <td>{entry?.carat?.toUpperCase() || "N/A"}</td>
+                            <td>{entry?.cut?.toUpperCase() || "N/A"}</td>
+                            <td>{entry?.color?.toUpperCase() || "N/A"}</td>
+                            <td>{entry?.clarity?.toUpperCase() || "N/A"}</td>
+                            <td>{entry?.depth || "N/A"}</td>
+                            <td>{entry?.table || "N/A"}</td>
+                            <td>{entry?.x || "N/A"}</td>
+                            <td>{entry?.y || "N/A"}</td>
+                            <td>{entry?.z || "N/A"}</td>
+                            <td>{entry?.price || "N/A"}</td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="11" style={{ textAlign: "center" }}>
+                            No history data available.
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>

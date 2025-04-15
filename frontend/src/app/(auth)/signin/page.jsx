@@ -4,8 +4,10 @@ import { useState } from "react";
 import "./style.css";
 import Link from "next/link";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 export default function signin() {
+  const [ErrorNotification, setErrorNotification] = useState("");
   const [formData, SetFormData] = useState({
     email: "",
     password: "",
@@ -17,15 +19,18 @@ export default function signin() {
 
   const handleSubmission = async (e) => {
     e.preventDefault();
-
     try {
       const response = await axios.post(
         "http://127.0.0.1:5000/signin",
         formData
       );
-      alert(response.data.message);
+      console.log(response.data.message);
+
+      Cookies.set("access_token", response.data?.access_token);
+      window.location.href = "/dashboard";
     } catch (error) {
-      alert(error.response?.data.error);
+      setErrorNotification(error.response?.data.error);
+      console.log(error.response?.data.error);
     }
   };
 
@@ -66,12 +71,16 @@ export default function signin() {
               <button type="submit" className="btn btn-primary auth-buttons">
                 Sign In
               </button>
+              {ErrorNotification && (
+                <div className="auth-alert-container hidden">
+                  <p className="auth-alert">{ErrorNotification}</p>
+                </div>
+              )}
             </form>
 
             <div className="auth-footer">
               <p>
-                Don't have an account? Sign Up{" "}
-                <Link href="/signup">Sign Up</Link>
+                Don't have an account? <Link href="/signup">Sign Up</Link>
               </p>
             </div>
           </div>

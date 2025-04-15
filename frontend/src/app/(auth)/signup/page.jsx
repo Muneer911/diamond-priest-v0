@@ -3,9 +3,9 @@ import Link from "next/link";
 import axios from "axios";
 import "./style.css";
 import { useState } from "react";
-import { cache } from "react";
 
 export default function singup() {
+  const [ErrorNotification, setErrorNotification] = useState();
   const [formData, SetFormData] = useState({
     email: "",
     password: "",
@@ -25,7 +25,8 @@ export default function singup() {
       );
       alert(response.data.message);
     } catch (error) {
-      alert(error.response?.data.error);
+      console.log(error.response?.data.error);
+      setErrorNotification(error.response?.data.error);
     }
   };
 
@@ -43,7 +44,7 @@ export default function singup() {
               <label htmlFor="name">Full Name</label>
               <input
                 type="text"
-                name="name"
+                name="username"
                 className="form-control"
                 id="name"
                 placeholder="Enter your name"
@@ -82,6 +83,11 @@ export default function singup() {
             >
               Create Account
             </button>
+            {ErrorNotification && (
+              <div className="auth-alert-container hidden">
+                <p className="auth-alert">{ErrorNotification}</p>
+              </div>
+            )}
           </form>
 
           <div className="auth-footer">
