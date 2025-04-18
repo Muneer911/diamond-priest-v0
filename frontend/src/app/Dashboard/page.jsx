@@ -32,7 +32,7 @@ export default function dashboard() {
       const access_token = Cookies.get("access_token");
       // Send formData to the backend for prediction
       const response = await axios.post(
-        "http://127.0.0.1:5000/predict",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/predict`,
         formData,
         { headers: { Authorization: `Bearer ${access_token}` } }
       );
@@ -59,7 +59,7 @@ export default function dashboard() {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          "http://127.0.0.1:5000/userdata", // API endpoint
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/userdata`, // API endpoint
           {}, // Empty body for the POST request
           {
             headers: { Authorization: `Bearer ${access_token}` }, // Headers
