@@ -21,7 +21,7 @@ export default function signin() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `${NEXT_PUBLIC_BACKEND_URL}/signin`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/signin`,
         formData
       );
       console.log(response.data.message);
