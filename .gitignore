@@ -23,8 +23,8 @@ __pycache__/
 # testing
 /coverage
 
-# ml model
-model/
+# ml model /commented for deployment purposes 
+# model/
 
 
 # next.js
