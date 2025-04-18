@@ -2,20 +2,18 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from supabase import Client, create_client
-from flask_bcrypt import Bcrypt
 from jose import jwt
 from dotenv import load_dotenv
 
 import pandas as pd
 import joblib
 import os
-preprocessor = joblib.load("../model/preprocessor.joblib")
-model = joblib.load("../model/saved-models/model.joblib")
+preprocessor = joblib.load("../ml_model/preprocessor.joblib")
+model = joblib.load("../ml_model/saved-models/model.joblib")
 supabase_url = os.getenv("SUPABASE_URL")
 superbase_apikey = os.getenv("SUPABASE_BEARER_KEY")
 superbase_SK = os.getenv("SUPABASE_SECRETKEY")
 app = Flask(__name__)
-bcrypt = Bcrypt(app)
 CORS(app)
 JWT = JWTManager(app)
 
