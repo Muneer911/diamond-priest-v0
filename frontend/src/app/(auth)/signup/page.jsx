@@ -20,7 +20,7 @@ export default function Singup() {
 
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}signup`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/signup`,
         formData
       );
       alert(response.data.message);
