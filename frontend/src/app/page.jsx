@@ -75,12 +75,16 @@ export default function Signin() {
               <button type="submit" className="btn btn-primary auth-buttons">
                 Sign In
               </button>
+              {ErrorNotification && (
+                <div className="auth-alert-container hidden">
+                  <p className="auth-alert">{ErrorNotification}</p>
+                </div>
+              )}
             </form>
 
             <div className="auth-footer">
               <p>
-                Don`&apos;`t have an account?{" "}
-                <Link href="/signup">Sign Up</Link>
+                Don&apos;t have an account? <Link href="/signup">Sign Up</Link>
               </p>
             </div>
           </div>

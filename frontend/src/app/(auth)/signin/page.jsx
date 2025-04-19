@@ -80,8 +80,7 @@ export default function Signin() {
 
             <div className="auth-footer">
               <p>
-                Don`&apos;`t have an account?{" "}
-                <Link href="/signup">Sign Up</Link>
+                Don&apos;t have an account? <Link href="/signup">Sign Up</Link>
               </p>
             </div>
           </div>
