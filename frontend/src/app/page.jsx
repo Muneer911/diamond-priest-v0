@@ -1,6 +1,7 @@
 // client side
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import "./style.css";
 import Link from "next/link";
 import axios from "axios";
@@ -24,7 +25,7 @@ export default function Signin() {
         formData
       );
       console.log(response.data.message);
-
+      router.push("/dashboard");
       Cookies.set("access_token", response.data?.access_token);
       window.location.href = "/dashboard";
     } catch (error) {
