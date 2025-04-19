@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
 export default function Signin() {
+  const [ErrorNotification, setErrorNotification] = useState("");
   const [formData, SetFormData] = useState({
     email: "",
     password: "",
@@ -34,6 +35,7 @@ export default function Signin() {
       });
       router.push("/dash"); // Client-side navigation
     } catch (error) {
+      setErrorNotification(error.response?.data.error);
       console.log(error.response?.data?.error);
     }
   };
