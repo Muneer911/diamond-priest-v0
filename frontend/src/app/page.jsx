@@ -30,7 +30,6 @@ export default function Signin() {
 
       Cookies.set("access_token", response.data?.access_token, {
         path: "/",
-        secure: process.env.NODE_ENV === "production",
         sameSite: "Strict",
       });
       router.push("/dashboard"); // Client-side navigation
