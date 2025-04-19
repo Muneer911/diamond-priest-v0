@@ -25,7 +25,11 @@ export default function Signin() {
       );
       console.log(response.data.message);
 
-      Cookies.set("access_token", response.data?.access_token);
+      Cookies.set("access_token", response.data?.access_token, {
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "Strict",
+      });
       window.location.href = "/dashboard";
     } catch (error) {
       console.log(error.response?.data?.error);
