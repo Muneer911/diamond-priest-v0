@@ -5,6 +5,7 @@ import "./style.css";
 import Link from "next/link";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 export default function Signin() {
   const [formData, SetFormData] = useState({
@@ -15,6 +16,8 @@ export default function Signin() {
   const handleChange = (e) => {
     SetFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  const router = useRouter();
 
   const handleSubmission = async (e) => {
     e.preventDefault();
@@ -30,7 +33,7 @@ export default function Signin() {
         secure: process.env.NODE_ENV === "production",
         sameSite: "Strict",
       });
-      window.location.href = "/dashboard";
+      router.push("/dashboard"); // Client-side navigation
     } catch (error) {
       console.log(error.response?.data?.error);
     }
