@@ -28,7 +28,7 @@ export default function signin() {
       Cookies.set("access_token", response.data?.access_token);
       window.location.href = "/dashboard";
     } catch (error) {
-      console.log(error.response?.data.error);
+      console.log(error.response?.data?.error);
     }
   };
 
