@@ -5,7 +5,7 @@ import "./style.css";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-export default function dashboard() {
+export default function Dashboard() {
   const [formData, setFormData] = useState({});
   const DEFAULT_PRICE = "$8,432.50";
   const [price, setPrice] = useState(null);

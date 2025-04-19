@@ -4,7 +4,7 @@ import axios from "axios";
 import "./style.css";
 import { useState } from "react";
 
-export default function singup() {
+export default function Singup() {
   const [ErrorNotification, setErrorNotification] = useState();
   const [formData, SetFormData] = useState({
     email: "",

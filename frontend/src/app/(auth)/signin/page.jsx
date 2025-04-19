@@ -6,7 +6,7 @@ import Link from "next/link";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-export default function signin() {
+export default function Signin() {
   const [ErrorNotification, setErrorNotification] = useState("");
   const [formData, SetFormData] = useState({
     email: "",
@@ -80,7 +80,8 @@ export default function signin() {
 
             <div className="auth-footer">
               <p>
-                Don't have an account? <Link href="/signup">Sign Up</Link>
+                Don`&apos;`t have an account?{" "}
+                <Link href="/signup">Sign Up</Link>
               </p>
             </div>
           </div>
