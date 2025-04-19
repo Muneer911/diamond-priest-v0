@@ -32,7 +32,7 @@ export default function Signin() {
         path: "/",
         sameSite: "Strict",
       });
-      router.push("/dashboard"); // Client-side navigation
+      router.push("/dash"); // Client-side navigation
     } catch (error) {
       console.log(error.response?.data?.error);
     }
