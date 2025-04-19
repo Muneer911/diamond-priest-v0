@@ -1,5 +1,5 @@
-"use client";
 export const dynamic = "force-dynamic";
+("use client");
 import { useEffect, useRef, useState } from "react";
 import "./style.css";
 import axios from "axios";
