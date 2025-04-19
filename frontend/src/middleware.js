@@ -20,5 +20,5 @@ export function middleware(req) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*"], // Protect /dashboard and all subroutes
+  matcher: ["/dash/:path*"], // Protect /dashboard and all subroutes
 };
