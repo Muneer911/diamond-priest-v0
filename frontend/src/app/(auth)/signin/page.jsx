@@ -27,7 +27,7 @@ export default function Signin() {
       console.log(response.data.message);
 
       Cookies.set("access_token", response.data?.access_token);
-      window.location.href = "/dashboard";
+      window.location.href = "/dash";
     } catch (error) {
       setErrorNotification(error.response?.data.error);
       console.log(error.response?.data.error);
