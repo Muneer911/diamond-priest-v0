@@ -21,7 +21,7 @@ load_dotenv()
 supabase: Client = create_client(supabase_url,superbase_apikey)
 
 @app.route("/userdata", methods=["POST","GET"])
-def home():
+def userdata():
     response = request.headers["Authorization"]
     token = response.split("Bearer ")[1]
     decoded_token = jwt.decode(token, superbase_SK, algorithms=["HS256"],  audience="authenticated")
@@ -75,7 +75,6 @@ def signup():
     except Exception as e:
         return jsonify(error=f"{str(e)}"), 500
 
-
 @app.route("/signin", methods=["POST", "GET"])
 def signin():
     try:
@@ -117,8 +116,6 @@ def signin():
     except Exception as e:
         return jsonify(error=f"{str(e)}"), 500
 
-
-predictionhis = []
 @app.route("/predict", methods=["POST","GET"])
 def predict():
     try:
