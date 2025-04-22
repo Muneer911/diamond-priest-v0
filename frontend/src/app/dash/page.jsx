@@ -54,8 +54,6 @@ export default function Dash() {
 
   useEffect(() => {
     const access_token = Cookies.get("access_token");
-    console.log("Access Token:", access_token);
-
     const fetchData = async () => {
       try {
         const response = await axios.post(
@@ -65,9 +63,6 @@ export default function Dash() {
             headers: { Authorization: `Bearer ${access_token}` }, // Headers
           }
         );
-        console.log("Response:", response.data?.message);
-        console.log("profile:", response.data?.user_profile);
-        console.log("history:", response.data?.user_histroy);
 
         const theData = response.data?.user_history;
         const userpro = [response.data?.user_profile];
