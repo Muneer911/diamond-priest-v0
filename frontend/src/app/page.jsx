@@ -6,8 +6,10 @@ import Link from "next/link";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import Loading from "./components/Loading";
 
 export default function Signin() {
+  const [loading, setLoading] = useState(false);
   const [ErrorNotification, setErrorNotification] = useState("");
   const [formData, SetFormData] = useState({
     email: "",
@@ -22,6 +24,7 @@ export default function Signin() {
 
   const handleSubmission = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/signin`,
@@ -38,6 +41,7 @@ export default function Signin() {
       setErrorNotification(error.response?.data.error);
       console.log(error.response?.data?.error);
     }
+    setLoading(false);
   };
 
   return (
@@ -45,6 +49,7 @@ export default function Signin() {
       <main>
         <div className="container">
           <div className="auth-container">
+            <div className="auth-loading">{loading ? <Loading /> : null}</div>
             <div className="auth-header">
               <h2>Welcome Back</h2>
               <p>Sign in to access your dashboard</p>
