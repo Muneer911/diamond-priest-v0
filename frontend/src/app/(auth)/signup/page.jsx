@@ -92,7 +92,7 @@ export default function Singup() {
 
           <div className="auth-footer">
             <p>
-              Already have an account? <Link href="/signin">Sign In</Link>
+              Already have an account? <Link href="/">Sign In</Link>
             </p>
           </div>
         </div>
