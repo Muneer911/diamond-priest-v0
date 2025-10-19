@@ -6,7 +6,7 @@ export default function DashBoardHeader(second) {
   const handleLogOut = () => {
     Cookie.remove("access_token");
     // location.reload();
-    window.location.href = "/signin";
+    window.location.href = "/";
   };
   return (
     <header>
