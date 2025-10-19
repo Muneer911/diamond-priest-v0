@@ -18,7 +18,7 @@ CORS(app)
 JWT = JWTManager(app)
 
 load_dotenv()
-supabase: Client = create_client(supabase_url,superbase_apikey)
+supabase: Client = create_client(supabase_url,superbase_apikey) # pyright: ignore[reportArgumentType]
 
 @app.route("/userdata", methods=["POST","GET"])
 def userdata():
