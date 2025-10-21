@@ -20,6 +20,7 @@ export default function Dash() {
         block: "center",
       });
   };
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -31,15 +32,13 @@ export default function Dash() {
     try {
       const access_token = Cookies.get("access_token");
       // Send formData to the backend for prediction
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/predict`,
-        formData,
-        { headers: { Authorization: `Bearer ${access_token}` } }
-      );
+      const response = await axios.post(`${backendUrl}/predict`, formData, {
+        headers: { Authorization: `Bearer ${access_token}` },
+      });
       console.log(response);
 
       if (response && response.data) {
-        setPrice(response.data);
+        setPrice(response.data?.price);
       } else {
         console.error("Unexpected response format:", response);
         alert("Failed to retrieve prediction. Please try again.");
@@ -54,21 +53,32 @@ export default function Dash() {
 
   useEffect(() => {
     const access_token = Cookies.get("access_token");
+    if (!access_token) {
+      console.warn("No access token available; skipping user data fetch.");
+      return;
+    }
+
+    let cancelled = false;
+
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/userdata`, // API endpoint
-          {}, // Empty body for the POST request
+          `http://192.168.1.139:5000/userdata`,
+          {}, // empty body
           {
-            headers: { Authorization: `Bearer ${access_token}` }, // Headers
+            headers: { Authorization: `Bearer ${access_token}` },
+            timeout: 10000,
           }
         );
 
-        const theData = response.data?.user_history;
-        const userpro = [response.data?.user_profile];
+        if (cancelled) return;
 
-        setUserProfile(userpro);
-        setHisData(theData);
+        const history = response?.data?.user_history ?? [];
+        const profile = response?.data?.user_profile ?? null;
+
+        setHisData(history);
+        // UI expects an array for userProfile; keep that shape
+        setUserProfile(profile ? [profile] : []);
       } catch (error) {
         console.error(
           "Error fetching user data:",
@@ -79,6 +89,10 @@ export default function Dash() {
     };
 
     fetchData();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
