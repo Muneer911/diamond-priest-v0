@@ -14,15 +14,13 @@ export default function Singup() {
   const handleChange = (e) => {
     SetFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   const handleSubmission = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/signup`,
-        formData
-      );
+      const response = await axios.post(`${backendUrl}/signup`, formData);
       alert(response.data.message);
     } catch (error) {
       console.log(error.response?.data.error);
