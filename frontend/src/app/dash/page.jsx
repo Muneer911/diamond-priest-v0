@@ -20,7 +20,6 @@ export default function Dash() {
         block: "center",
       });
   };
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -32,9 +31,13 @@ export default function Dash() {
     try {
       const access_token = Cookies.get("access_token");
       // Send formData to the backend for prediction
-      const response = await axios.post(`${backendUrl}/predict`, formData, {
-        headers: { Authorization: `Bearer ${access_token}` },
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/predict`,
+        formData,
+        {
+          headers: { Authorization: `Bearer ${access_token}` },
+        }
+      );
       console.log(response);
 
       if (response && response.data) {
