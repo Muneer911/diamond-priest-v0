@@ -27,7 +27,10 @@ export default function Signin() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(`${backendUrl}/signin`, formData);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/signin`,
+        formData
+      );
       console.log(response.data.message);
 
       Cookies.set("access_token", response.data?.access_token, {

@@ -66,7 +66,7 @@ export default function Dash() {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          `http://192.168.1.139:5000/userdata`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/userdata`,
           {}, // empty body
           {
             headers: { Authorization: `Bearer ${access_token}` },
