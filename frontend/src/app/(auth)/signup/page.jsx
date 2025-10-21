@@ -20,7 +20,10 @@ export default function Singup() {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`${backendUrl}/signup`, formData);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/signup`,
+        formData
+      );
       alert(response.data.message);
     } catch (error) {
       console.log(error.response?.data.error);
