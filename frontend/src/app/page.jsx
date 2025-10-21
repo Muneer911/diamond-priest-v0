@@ -21,15 +21,13 @@ export default function Signin() {
   };
 
   const router = useRouter();
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   const handleSubmission = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/signin`,
-        formData
-      );
+      const response = await axios.post(`${backendUrl}/signin`, formData);
       console.log(response.data.message);
 
       Cookies.set("access_token", response.data?.access_token, {
