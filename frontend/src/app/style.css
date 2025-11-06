@@ -1,6 +1,5 @@
 .container {
   max-width: 1200px;
-  margin: 0 auto;
   padding: 0 20px;
 }
 
@@ -19,6 +18,8 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
+  z-index: 1000;
 }
 
 .logo {
@@ -51,7 +52,6 @@ header {
 
 .auth-buttons {
   display: flex;
-  width: 100%;
   gap: 10px;
   justify-content: center;
 }
@@ -171,4 +171,9 @@ main {
 .auth-footer a {
   color: var(--primary);
   text-decoration: none;
+}
+@media only screen and (max-width: 600px) {
+  .signout-auth-buttons {
+    display: none;
+  }
 }
