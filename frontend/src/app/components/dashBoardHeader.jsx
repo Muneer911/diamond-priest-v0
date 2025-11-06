@@ -2,7 +2,7 @@
 // import "./headerStyle.css";
 import Cookie from "js-cookie";
 import { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { fetchUserData } from "../api/useFetchData";
 import { GrMenu } from "react-icons/gr";
 import { IoCloseSharp } from "react-icons/io5";
