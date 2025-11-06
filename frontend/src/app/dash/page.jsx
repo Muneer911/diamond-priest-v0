@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import "./style.css";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { fetchUserData } from "../api/useFetchData";
 
 export default function Dash() {
   const [formData, setFormData] = useState({});
@@ -56,42 +57,20 @@ export default function Dash() {
 
   useEffect(() => {
     const access_token = Cookies.get("access_token");
-    if (!access_token) {
-      console.warn("No access token available; skipping user data fetch.");
-      return;
-    }
-
     let cancelled = false;
+    if (!access_token) return;
 
-    const fetchData = async () => {
+    (async () => {
       try {
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/userdata`,
-          {}, // empty body
-          {
-            headers: { Authorization: `Bearer ${access_token}` },
-            timeout: 10000,
-          }
-        );
-
-        if (cancelled) return;
-
-        const history = response?.data?.user_history ?? [];
-        const profile = response?.data?.user_profile ?? null;
-
-        setHisData(history);
-        // UI expects an array for userProfile; keep that shape
-        setUserProfile(profile ? [profile] : []);
+        const { history, profile } = await fetchUserData(access_token);
+        if (!cancelled) {
+          setHisData(history);
+          setUserProfile(profile ? [profile] : []);
+        }
       } catch (error) {
-        console.error(
-          "Error fetching user data:",
-          error.response?.data || error
-        );
-        alert("Failed to fetch user data. Please try again.");
+        console.error(error);
       }
-    };
-
-    fetchData();
+    })();
 
     return () => {
       cancelled = true;
