@@ -5,6 +5,7 @@ import "./style.css";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { fetchUserData } from "../api/useFetchData";
+import HistorySection from "../components/historySection";
 
 export default function Dash() {
   const [formData, setFormData] = useState({});
@@ -290,51 +291,8 @@ export default function Dash() {
                     {price ? ` $${price}` : DEFAULT_PRICE}
                   </div>
                 </div>
-
-                <div ref={historyRef} className="history-section">
-                  <h3 className="history-title">Recent Predictions</h3>
-                  <table className="history-table">
-                    <thead>
-                      <tr>
-                        <th>Date</th>
-                        <th>Carat</th>
-                        <th>Cut</th>
-                        <th>Color</th>
-                        <th>Clarity</th>
-                        <th>Depth</th>
-                        <th>Table percentage</th>
-                        <th>X</th>
-                        <th>Y</th>
-                        <th>Z</th>
-                        <th>Predicted Value</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {hisData && hisData.length > 0 ? (
-                        hisData.map((entry, index) => (
-                          <tr key={index}>
-                            <td>{entry?.date}</td>
-                            <td>{entry?.carat?.toUpperCase() || "N/A"}</td>
-                            <td>{entry?.cut?.toUpperCase() || "N/A"}</td>
-                            <td>{entry?.color?.toUpperCase() || "N/A"}</td>
-                            <td>{entry?.clarity?.toUpperCase() || "N/A"}</td>
-                            <td>{entry?.depth || "N/A"}</td>
-                            <td>{entry?.table || "N/A"}</td>
-                            <td>{entry?.x || "N/A"}</td>
-                            <td>{entry?.y || "N/A"}</td>
-                            <td>{entry?.z || "N/A"}</td>
-                            <td>{entry?.price || "N/A"}</td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td colSpan="11" style={{ textAlign: "center" }}>
-                            No history data available.
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
+                <div className="history-section">
+                  <HistorySection historyRef={historyRef} hisData={hisData} />
                 </div>
               </div>
             </div>
