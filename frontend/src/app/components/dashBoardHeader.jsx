@@ -24,7 +24,6 @@ export default function DashBoardHeader(second) {
       return fetchUserData(access_token);
     },
   });
-  console.log(query);
   return (
     <header>
       <div className="container header-content">

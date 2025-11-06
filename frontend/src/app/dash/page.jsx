@@ -40,16 +40,12 @@ export default function Dash() {
           headers: { Authorization: `Bearer ${access_token}` },
         }
       );
-      console.log(response);
-
       if (response && response.data) {
         setPrice(response.data?.price);
       } else {
-        console.error("Unexpected response format:", response);
         alert("Failed to retrieve prediction. Please try again.");
       }
     } catch (error) {
-      console.error("Error during prediction request:", error);
       alert(
         "An error occurred while processing your prediction request. Please check your input and try again."
       );
@@ -69,7 +65,7 @@ export default function Dash() {
           setUserProfile(profile ? [profile] : []);
         }
       } catch (error) {
-        console.error(error);
+        // console.error(error);
       }
     })();
 

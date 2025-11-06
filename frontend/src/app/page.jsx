@@ -28,7 +28,6 @@ export default function Signin() {
     setLoading(true);
     try {
       const response = await axios.post(`${backendUrl}/signin`, formData);
-      console.log(response.data.message);
 
       Cookies.set("access_token", response.data?.access_token, {
         path: "/",
@@ -37,7 +36,6 @@ export default function Signin() {
       router.push("/dash"); // Client-side navigation
     } catch (error) {
       setErrorNotification(error.response?.data.error);
-      console.log(error.response?.data?.error);
     }
     setLoading(false);
   };

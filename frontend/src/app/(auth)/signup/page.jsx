@@ -45,7 +45,6 @@ export default function Singup() {
     } catch (error) {
       const msg =
         error.response?.data.error || error.message || "Signup failed";
-      console.log(msg);
       setErrorNotification({
         visible: true,
         title: "Error",
