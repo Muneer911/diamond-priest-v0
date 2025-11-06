@@ -45,8 +45,12 @@ export default function DashBoardHeader(second) {
 
         <div className={`toggle-menu-content ${isOpen ? "open" : ""}`}>
           <div className="">
-            <h1>{query.data?.profile["user_name"]}</h1>
-            <p>{query.data?.profile["user_email"]}</p>
+            <h1 className="hanmburger-userName">
+              {query.data?.profile["user_name"]}
+            </h1>
+            <p className="hamburger-userEmail">
+              {query.data?.profile["user_email"]}
+            </p>
           </div>
           <button
             className="btn btn-outline"
