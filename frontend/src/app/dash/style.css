@@ -13,7 +13,6 @@
 }
 
 .toggle-menu-content {
-  /* fixed top-0 left-0 h-full bg-gray-800 text-white w-64 */
   display: none;
   position: fixed;
   top: 0;
@@ -30,6 +29,10 @@
 }
 .toggle-menu-content.open {
   transform: translateX(0);
+}
+.toggle-menu-content p.hamburger-userEmail {
+  font-size: 14px;
+  color: var(--text-light);
 }
 .sidebar {
   background-color: var(--white);
@@ -209,5 +212,9 @@
     padding: 8px 11px;
     text-align: left;
     border-bottom: 1px solid #eee;
+  }
+  .history-table th.sm-screen-off,
+  .history-table td.sm-screen-off {
+    display: none;
   }
 }
