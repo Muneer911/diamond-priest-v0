@@ -5,7 +5,6 @@ from supabase import Client, create_client
 from jose import jwt
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash
-
 import pandas as pd
 import joblib
 import os
