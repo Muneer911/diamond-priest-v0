@@ -5,7 +5,7 @@ import axios from "axios";
 export async function fetchUserData(access_token) {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
   const response = await axios.post(
-    "http://127.0.0.1:5000/userdata",
+    `${backendUrl}/userdata`,
     {},
     {
       headers: { Authorization: `Bearer ${access_token}` },
