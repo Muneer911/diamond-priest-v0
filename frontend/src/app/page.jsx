@@ -27,10 +27,7 @@ export default function Signin() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/signin`,
-        formData
-      );
+      const response = await axios.post(`${backendUrl}/signin`, formData);
       console.log(response.data.message);
 
       Cookies.set("access_token", response.data?.access_token, {
@@ -50,7 +47,7 @@ export default function Signin() {
       <main>
         <div className="container">
           <div className="auth-container">
-            <div className="auth-loading">{loading ? <Loading /> : null}</div>
+            <div className="auth-loading">{loading && <Loading />}</div>
             <div className="auth-header">
               <h2>Welcome Back</h2>
               <p>Sign in to access your dashboard</p>
