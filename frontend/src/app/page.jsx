@@ -21,16 +21,13 @@ export default function Signin() {
   };
 
   const router = useRouter();
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   const handleSubmission = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/signin`,
-        formData
-      );
-      console.log(response.data.message);
+      const response = await axios.post(`${backendUrl}/signin`, formData);
 
       Cookies.set("access_token", response.data?.access_token, {
         path: "/",
@@ -39,7 +36,6 @@ export default function Signin() {
       router.push("/dash"); // Client-side navigation
     } catch (error) {
       setErrorNotification(error.response?.data.error);
-      console.log(error.response?.data?.error);
     }
     setLoading(false);
   };
@@ -49,7 +45,7 @@ export default function Signin() {
       <main>
         <div className="container">
           <div className="auth-container">
-            <div className="auth-loading">{loading ? <Loading /> : null}</div>
+            <div className="auth-loading">{loading && <Loading />}</div>
             <div className="auth-header">
               <h2>Welcome Back</h2>
               <p>Sign in to access your dashboard</p>

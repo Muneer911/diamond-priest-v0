@@ -1,11 +1,24 @@
 "use client";
 import Link from "next/link";
 import axios from "axios";
-import "./style.css";
+import "../../style.css";
 import { useState } from "react";
+import Loading from "../../components/Loading";
 
 export default function Singup() {
-  const [ErrorNotification, setErrorNotification] = useState();
+  const [loading, setLoading] = useState(false);
+  const [ErrorNotification, setErrorNotification] = useState({
+    visible: false,
+    title: "Error",
+    message: "",
+  });
+  const [SuccessNotification, setSuccessNotification] = useState({
+    visible: false,
+    title: "Success",
+    message: "",
+  });
+  // true => show successNotification, false => show errorNotification
+  const [isSuccess, setIsSuccess] = useState(false);
   const [formData, SetFormData] = useState({
     email: "",
     password: "",
@@ -14,26 +27,40 @@ export default function Singup() {
   const handleChange = (e) => {
     SetFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   const handleSubmission = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/signup`,
-        formData
-      );
-      alert(response.data.message);
+      const response = await axios.post(`${backendUrl}/signup`, formData);
+      setSuccessNotification({
+        visible: true,
+        title: "Success",
+        message: response.data?.message || "Account created",
+      });
+      setErrorNotification((s) => ({ ...s, visible: false }));
+      setIsSuccess(true);
     } catch (error) {
-      console.log(error.response?.data.error);
-      setErrorNotification(error.response?.data.error);
+      const msg =
+        error.response?.data.error || error.message || "Signup failed";
+      setErrorNotification({
+        visible: true,
+        title: "Error",
+        message: msg,
+      });
+      setSuccessNotification((s) => ({ ...s, visible: false }));
+      setIsSuccess(false);
     }
+    setLoading(false);
   };
 
   return (
     <main>
       <div className="container">
         <div className="auth-container">
+          <div className="auth-loading">{loading && <Loading />} </div>
           <div className="auth-header">
             <h2>Create Account</h2>
             <p>Sign up to use the Diamond Prediction tool</p>
@@ -83,11 +110,23 @@ export default function Singup() {
             >
               Create Account
             </button>
-            {ErrorNotification && (
-              <div className="auth-alert-container hidden">
-                <p className="auth-alert">{ErrorNotification}</p>
+            {isSuccess && SuccessNotification.visible ? (
+              <div
+                className="auth-alert-container"
+                style={{ backgroundColor: "#09DF3B" }}
+              >
+                <p className="auth-alert">{SuccessNotification.message}</p>
               </div>
-            )}
+            ) : null}
+
+            {!isSuccess && ErrorNotification.visible ? (
+              <div
+                className="auth-alert-container"
+                style={{ backgroundColor: "red" }}
+              >
+                <p className="auth-alert">{ErrorNotification.message}</p>
+              </div>
+            ) : null}
           </form>
 
           <div className="auth-footer">
