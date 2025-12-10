@@ -201,7 +201,10 @@ def signin():
 
     except Exception as e:
         return jsonify(error=f"{str(e)}"), 500
-
+    
+@app.route("active", methods=["GET"])
+def active():
+    return jsonify({"message": "API is working"}, 200)
 
 @app.route("/predict", methods=["POST", "GET"])
 def predict():
